@@ -1,0 +1,17 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Learning node,express,mongodb",
+  "main": "app.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ShriSowmiyaK/Natours-TourBookingApplication.git"
+  },
+  "author": "ShriSowmiyaK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShriSowmiyaK/Natours-TourBookingApplication/issues"
+  },
+  "homepage": "https://github.com/ShriSowmiyaK/Natours-TourBookingApplication#readme"
+}
