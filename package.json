@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Learning node,express,mongodb",
   "main": "app.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node server.js",
+    "nodemon": "nodemon server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ShriSowmiyaK/Natours-TourBookingApplication.git"
@@ -13,5 +16,26 @@
   "bugs": {
     "url": "https://github.com/ShriSowmiyaK/Natours-TourBookingApplication/issues"
   },
-  "homepage": "https://github.com/ShriSowmiyaK/Natours-TourBookingApplication#readme"
+  "homepage": "https://github.com/ShriSowmiyaK/Natours-TourBookingApplication#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.3",
+    "morgan": "^1.10.1",
+    "nodemailer": "^7.0.5",
+    "nodemon": "^3.1.10",
+    "qs": "^6.14.0",
+    "slugify": "^1.6.6",
+    "validator": "^13.15.15",
+    "xss-clean": "^0.1.4"
+  },
+  "engines": {
+    "node": ">=22.7.0 <23"
+  }
 }

@@ -1,0 +1,32 @@
+EMAIL_USERNAME=tempdummy18@gmail.com
+EMAIL_PASSWORD=agxg fhke cgww lgol
+
+
+const nodemailer = require("nodemailer");
+
+const sendEmail = options => {
+    //create a transporter - service that sends mail
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+    //define the options
+    const mailoptions = {
+        from: 'tempdummy18@gmail.com',
+        to: 'kshrisowmiya@gmail.com',
+        subject: 'Test mail',
+        text: 'Testing mail for natours'
+    }
+    //actually send the email with nodemail
+    transporter.sendMail(mailoptions,
+        function (err, data) {
+            if (err) {
+                console.log('Error Occurs');
+            } else {
+                console.log('Email sent successfully');
+            }
+        });
+}
