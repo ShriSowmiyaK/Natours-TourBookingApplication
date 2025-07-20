@@ -4,14 +4,9 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const db_url = (process.env.DATABASE).replace('<db_password>', 'Natours');
 const Tour = require('./../../models/tourModel');
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
-mongoose.connect(db_url, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-}).then((con) => {
+mongoose.connect(db_url).then((con) => {
     console.log('DB connection successful!');
 });
 const importData = async () => {

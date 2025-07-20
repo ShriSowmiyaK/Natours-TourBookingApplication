@@ -49,7 +49,8 @@ app.use(express.json({
 app.use(mongoSanitize());
 
 //data sanization against xss
-app.use(xss());
+app.use(xss()); 3
+
 
 //prevent parameter pollution (we give sort by date and sort by maxval then throws err - we can whitelist some parameters)
 app.use(hpp({
