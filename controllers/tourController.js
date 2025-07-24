@@ -1,8 +1,7 @@
 const Tour = require("./../models/tourModel");
-const ApiFeatures = require("./../utils/ApiFeatures");
 const catchAsyncError = require("./../utils/catchAsyncError");
 const AppError = require("./../utils/AppError");
-
+const { deleteOne, updateOne, createOne, getOne, getAll } = require("./handleFactory");
 
 exports.aliasTopTours = (req, res, next) => {
     req.url = "/?sort=-ratingsAverage,price&fields=ratingsAverage,price,name,difficulty,summary&limit=5";
@@ -10,83 +9,15 @@ exports.aliasTopTours = (req, res, next) => {
 }
 
 
-exports.getAllTours = catchAsyncError(async (req, res, next) => {
-    //Getting features from ApiFeatures
-    const features = new ApiFeatures(Tour.find(), req.query).filter().sorting().fieldLimiting().pagination();
-    //Execute query
-    const tours = await features.query;
-    res.status(200).json({
-        status: 'success',
-        results: tours.length,
-        data: {
-            tours
-        }
-    });
+exports.getAllTours = getAll(Tour);
 
-})
+exports.getSingleTour = getOne(Tour, { path: "reviews" });
 
-exports.createTour = catchAsyncError(async (req, res, next) => {
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour: newTour
-        }
-    })
-})
+exports.updateTour = updateOne(Tour);
 
+exports.deleteTour = deleteOne(Tour);
 
-exports.getSingleTour = catchAsyncError(async (req, res, next) => {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    const tour = await Tour.findById(req.params.id);
-    if (!tour) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour
-        }
-    });
-})
-
-
-exports.updateTour = catchAsyncError(async (req, res, next) => {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
-    if (!tour) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour
-        }
-    });
-})
-
-
-exports.deleteTour = catchAsyncError(async (req, res, next) => {
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    const tour = await Tour.findByIdAndDelete(req.params.id);
-    if (!tour) {
-        return next(new AppError("There is no tour with such an id", 404));
-    }
-    res.status(201).json({
-        status: 'success',
-        data: null
-    });
-})
-
+exports.createTour = createOne(Tour);
 
 exports.getStats = catchAsyncError(async (req, res, next) => {
     const stats = await Tour.aggregate([

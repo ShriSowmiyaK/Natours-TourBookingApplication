@@ -97,6 +97,12 @@ const tourSchema = new mongoose.Schema(
                 day: Number
             }
         ],
+        guides: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User'
+            }
+        ]
     },
 
     {
@@ -104,20 +110,23 @@ const tourSchema = new mongoose.Schema(
         toObject: { virtuals: true }
     });
 
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index("slug", 1);
+
 tourSchema.virtual("durationWeeks").get(function () {
     return this.duration;
 });
 
+tourSchema.virtual("reviews", {
+    ref: "Review",
+    foreignField: "tour",
+    localField: "_id"
+})
+
 // tourSchema.pre('save', function (next) {
 //     this.slug = slugify(this.name, { lower: true });
-//     console.log('before');
+//     console.log('before'  );
 //     console.log(this);
-//     next();
-// })
-
-// tourSchema.post('save', function (doc, next) {
-//     console.log('after');
-//     console.log(doc);
 //     next();
 // })
 
@@ -127,6 +136,14 @@ tourSchema.pre(/^find/, function (next) {
     next();
 })
 
+tourSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: "guides",
+        select: "-__v -passwordChangedAt"
+    });
+    next();
+});
+
 tourSchema.post(/^find/, function (docs, next) {
     const timeTaken = Date.now() - this.start;
     console.log(timeTaken);
@@ -134,9 +151,9 @@ tourSchema.post(/^find/, function (docs, next) {
 })
 
 tourSchema.pre('aggregate', function (next) {
-    console.log(this.pipeline().unshift({
+    this.pipeline().unshift({
         $match: { secretTour: { $ne: true } }
-    }));
+    })
     next();
 })
 

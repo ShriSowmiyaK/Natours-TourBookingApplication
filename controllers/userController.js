@@ -2,7 +2,7 @@ const User = require("./../models/userModel");
 const ApiFeatures = require("./../utils/ApiFeatures");
 const catchAsyncError = require("./../utils/catchAsyncError");
 const AppError = require("./../utils/AppError");
-
+const { deleteOne, updateOne, createOne, getOne, getAll } = require("./handleFactory");
 
 const filterObj = (existingFields, ...allowedFields) => {
     const fields = {};
@@ -14,16 +14,10 @@ const filterObj = (existingFields, ...allowedFields) => {
     return fields;
 }
 
-exports.getAllUsers = catchAsyncError(async (req, res, next) => {
-    const users = await User.find();
-    res.status(200).json({
-        status: 'success',
-        results: users.length,
-        data: {
-            users
-        }
-    });
-});
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+}
 
 exports.updateMe = catchAsyncError(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
@@ -43,7 +37,6 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
     });
 });
 
-
 exports.deleteMe = catchAsyncError(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { active: false });
     res.status(204).json({
@@ -52,28 +45,14 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
     });
 });
 
-
-exports.getUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined!'
-    });
-};
 exports.createUser = (req, res) => {
     res.status(500).json({
         status: 'error',
-        message: 'This route is not yet defined!'
+        message: 'This route is not defined! Use signup!'
     });
 };
-exports.updateUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined!'
-    });
-};
-exports.deleteUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined!'
-    });
-};
+
+exports.getAllUsers = getAll(User);
+exports.getUser = getOne(User);
+exports.updateUser = updateOne(User);
+exports.deleteUser = deleteOne(User);

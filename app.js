@@ -8,9 +8,32 @@ const qs = require("qs");
 const morgan = require("morgan");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
 const AppError = require("./utils/AppError");
 const globalErrorHandler = require("./controllers/errorHandler");
 const app = express();
+
+app.use((req, res, next) => {
+    Object.defineProperty(req, 'query', {
+        ...Object.getOwnPropertyDescriptor(req, 'query'),
+        value: req.query,
+        writable: true,
+    });
+    next();
+});
+
+//data sanization against nosql query injection-filters all $ and .
+app.use(mongoSanitize());
+
+// app.use((req, res, next) => {
+//     console.log("Sanitization by mongo-sanitize");    
+//     console.log("Sanitized Query:", req.query);
+//     next();
+// });
+
+
+//data sanization against xss
+app.use(xss());
 
 //headers will be surely set
 //set security http headers
@@ -45,12 +68,6 @@ app.use(express.json({
     limit: "10kb"
 }));
 
-//data sanization against nosql query injection-filters all $ and .
-app.use(mongoSanitize());
-
-//data sanization against xss
-app.use(xss()); 3
-
 
 //prevent parameter pollution (we give sort by date and sort by maxval then throws err - we can whitelist some parameters)
 app.use(hpp({
@@ -70,6 +87,7 @@ app.use(express.static("./public"));
 //routes
 app.use("/api/tours", tourRouter);
 app.use("/api/users", userRouter);
+app.use("/api/reviews", reviewRouter);
 
 //handling invalid routes
 app.all(/.*/, (req, res, next) => {

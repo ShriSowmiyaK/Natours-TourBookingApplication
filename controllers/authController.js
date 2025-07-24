@@ -76,7 +76,7 @@ exports.protect = catchAsyncError(async (req, res, next) => {
     //verify token
     const verify = promisify(jwt.verify);
     const decode = await verify(token, process.env.JWT_SECRET);
-    console.log(decode);
+    // console.log(decode);
     //chk if user still exists (What if user is deleted (hacker knows password , user changes password but old token will exist))
     const currentUser = await User.findById(decode.id);
     if (!currentUser) {
