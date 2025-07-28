@@ -82,7 +82,7 @@ app.use(hpp({
 }));
 
 //serving static files
-app.use(express.static("./public"));
+// app.use(express.static("./public"));
 
 //routes
 app.use("/api/tours", tourRouter);
